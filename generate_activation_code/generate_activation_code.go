@@ -1,4 +1,3 @@
-// FILEPATH: DJCP/generate_activation_code.go
 package main
 
 import (

@@ -125,6 +125,7 @@ func encrypt(data []byte, key []byte) (string, error) {
     return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
+
 // 解密函数
 func decrypt(ciphertext string, key []byte) ([]byte, error) {
     data, err := base64.StdEncoding.DecodeString(ciphertext)
