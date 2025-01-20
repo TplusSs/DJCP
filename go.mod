@@ -33,7 +33,6 @@ require (
 	gorm.io/driver/postgres v1.5.0
 	gorm.io/driver/sqlserver v1.4.3
 	gorm.io/gorm v1.25.1
-	github.com/shirou/gopsutil/v3 v3.24.3
 )
 
 require (
@@ -89,6 +88,7 @@ require (
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
 	github.com/smartystreets/goconvey v1.8.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/tjfoc/gmsm v1.4.1 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
 	github.com/tklauser/numcpus v0.6.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
