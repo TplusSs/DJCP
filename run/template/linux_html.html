@@ -1,0 +1,481 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux安全配置核查</title>
+    <link rel="icon" href="favicon.ico" sizes="16x16">
+    <style>{{.CSS}}</style>
+</head>
+
+<body>
+<div id="content">
+    <div style="text-align: center;"><h1>{{.Name}}_Linux安全策略核查</h1></div>
+
+    <h2 id="info">服务器基本信息</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>主机名</th>
+            <th>操作系统位数</th>
+            <th>CPU型号</th>
+            <th>CPU个数</th>
+            <th>CPU核数</th>
+            <th>共计内存/G</th>
+            <th>硬件型号</th>
+            <th>系统版本</th>
+            <th>联网检测</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{.Info.HostName}}</td>
+            <td>{{.Info.Arch}}</td>
+            <td>{{.Info.Cpu}}</td>
+            <td>{{.Info.CpuPhysical}}</td>
+            <td>{{.Info.CpuCore}}</td>
+            <td>{{.Info.Free}}</td>
+            <td>{{.Info.ProductName}}</td>
+            <td>{{.Info.Version}}</td>
+            <td>{{.Info.Ping}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <h2 id="systemstate">系统状态</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>CPU空闲率</th>
+            <th>内存使用率</th>
+            <th>系统平均负载</th>
+            <th>系统时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{.SystemState.Cpu}}</td>
+            <td>{{.SystemState.Memory}}</td>
+            <td>{{.SystemState.Load}}</td>
+            <td>{{.SystemState.Time}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
+    <h2 id="userinfo">用户信息</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>用户</th>
+            <th><a href="#" onclick="return showPasswdStatus()">密码状态</a></th>
+            <th>状态描述</th>
+            <th>UID</th>
+            <th>GID</th>
+            <th>主目录</th>
+            <th>Bash</th>
+            <th>可登录</th>
+            <th>上次修改密码时间</th>
+            <th><a href="#" onclick="return showPasswordExpiryNote()">密码过期的日期</a></th>
+            <th><a href="#" onclick="return showAccountExpiryNote()">账号过期的日期</a></th>
+            <th>密码最大使用天数</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .User}}
+        <tr>
+            <td>{{.Name}}</td>
+            {{if eq .Passwd "PS"}}
+            <td style="color: rgb(32, 199, 29)">{{.Passwd}}</td>
+            {{else}}
+            <td style="color: rgb(255, 0, 0)">{{.Passwd}}</td>
+            {{end}}
+            <td>{{.Remark}}</td>
+            <td>{{.Uid}}</td>
+            <td>{{.Gid}}</td>
+            <td>{{.Pwd}}</td>
+            <td>{{.Bash}}</td>
+            {{if .Login}}
+                <td style="color: rgb(32, 199, 29)">是</td>
+            {{else}}
+                <td style="color: rgb(255, 0, 0)">否</td>
+            {{end}}
+            <td>{{.LastPasswd}}</td>
+            <td>{{.PasswdExpired}}</td>
+            <td>{{.UserExpired}}</td>
+            <td>{{.MaxPasswd}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="group">组信息</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>用户</th>
+            <th>密码</th>
+            <th>GID</th>
+            <th>组成员</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Group}}
+        <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Password}}</td>
+            <td>{{.Gid}}</td>
+            <td>{{.UserList}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="newuserinfo">新建用户密码信息(只对新创建的用户账户有效)</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>用户更改密码之间的最小天数</th>
+            <th>用户密码的最大有效期</th>
+            <th>在密码过期之前发出警告的天数</th>
+            <th>新创建的文件和目录的默认权限掩码</th>
+            <th>加密用户密码的方法</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .CreateUser}}
+        <tr>
+            <td>{{.PassMinDays}}</td>
+            <td>{{.PassMaxDays}}</td>
+            <td>{{.PassWarnAge}}</td>
+            <td>{{.UMASK}}</td>
+            <td>{{.EncryptMethod}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+
+    <h2 id="pwquality">密码复杂度策略(/etc/security/pwquality.conf)</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>最小长度</th>
+            <th>数字字符位数</th>
+            <th>大写字母位数</th>
+            <th>小写字母位数</th>
+            <th>特殊符号位数</th>
+            <th>最小类别数量</th>
+            <th>重复字符最大位数</th>
+            <th>连续重复字符位数</th>
+            <th>建议配置</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{.Quality.Minlen}}</td>
+            <td>{{.Quality.Dcredit}}</td>
+            <td>{{.Quality.Ucredit}}</td>
+            <td>{{.Quality.Lcredit}}</td>
+            <td>{{.Quality.Ocredit}}</td>
+            <td>{{.Quality.Minclass}}</td>
+            <td>{{.Quality.Maxrepeat}}</td>
+            <td>{{.Quality.Maxsequence}}</td>
+            <td>
+                在/etc/security/pwquality.conf配置文件中:<br />
+                minlen = 8<br />
+                minclass = 4<br />
+                maxrepeat = 2<br />
+                maxsequence =2
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2 id="sshd">sshd_config安全配置信息</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>是否可以root登录</th>
+            <th>是否允许密码进行验证</th>
+            <th>是否允许空密码进行认证</th>
+            <th>是否允许密钥免密登录</th>
+            <th>版本协议</th>
+            <th>关闭连接之前允许的最大身份验证尝试次数</th>
+            <th>建议配置</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .ConfigSSH}}
+        <tr>
+            <td>{{.PermitRootLogin}}</td>
+            <td>{{.PasswordAuthentication}}</td>
+            <td>{{.PermitEmptyPasswords}}</td>
+            <td>{{.PubkeyAuthentication}}</td>
+            <td>{{.Protocol}}</td>
+            <td>{{.MaxAuthTries}}</td>
+            <td>
+                在/etc/ssh/sshd_config配置文件中:<br />
+                PermitRootLogin no<br />
+                PasswordAuthentication yes<br />
+                PermitEmptyPasswords no<br />
+                PubkeyAuthentication yes<br />
+                Protocol 2<br />
+                MaxAuthTries 3
+            </td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+
+    <h2 id="port">端口开放状态</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>协议</th>
+            <th>状态</th>
+            <th>监听地址</th>
+            <th>进程信息</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Port}}
+        <tr>
+            <td>{{.Netid}}</td>
+            <td>{{.State}}</td>
+            <td>{{.Local}}</td>
+            <td>{{.Process}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="xz">xz后门检测(CVE-2024-3094)</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>是否存在漏洞</th>
+            <th>影响版本</th>
+            <th>漏洞说明</th>
+            <th>修复建议</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            {{if .XZ}}
+            <td style="color: rgb(255, 0, 0)">是</td>
+            {{else}}
+            <td style="color: rgb(32, 199, 29)">否</td>
+            {{end}}
+            <td>5.6.0、5.6.1</td>
+            <td>攻击者可利用此漏洞在受影响的系统上绕过SSH的认证获得未授权的访问权限，从而执行任意代码。</td>
+            <td>目前 GitHub 已关停整个 xz 项目，官方尚无最新版本，需对软件版本进行降级5.4.X，请关注官方新版本发布并及时更新。</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2 id="FilePer">重要文件信息</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>文件</th>
+            <th>权限</th>
+            <th>大小(字节)</th>
+            <th>所属用户</th>
+            <th>所属组</th>
+            <th>最后访问时间</th>
+            <th>最后修改时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .FilePer}}
+        <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Permission}}</td>
+            <td>{{.Size}}</td>
+            <td>{{.Uid}}</td>
+            <td>{{.Gid}}</td>
+            <td>{{.LastReadTime}}</td>
+            <td>{{.LastWriteTime}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="iptables">防火墙/selinux状态</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .FireWalld}}
+        <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Status}}</td>
+        </tr>
+        {{end}}
+
+        </tbody>
+    </table>
+    <h2 id="home">用户目录权限</h2>
+    <pre><code>{{.HomeLimits}}</code></pre>
+
+    <h2 id="iptablesinfo">防火墙策略</h2>
+    <pre><code>{{.IptablesInfo}}</code></pre>
+
+    <h2 id="allow">地址限制</h2>
+    <pre><code><span style="color: rgb(32, 199, 29);font-size: 20px">/etc/hosts.allow:</span><br>{{.HostAllow}}<br><span style="color: rgb(32, 199, 29);font-size: 20px">/etc/hosts.deny:</span><br>{{.HostDeny}}</code></pre>
+
+    <h2 id="ipaddr">网卡信息</h2>
+    <pre><code>{{.Address}}</code></pre>
+
+    <h2 id="disk">磁盘信息</h2>
+    <pre><code>{{.Disk}}</code></pre>
+
+    <h2 id="dns">DNS配置信息(/etc/resolv.conf已去除注释行)</h2>
+    <pre><code>{{.Dns}}</code></pre>
+
+    <h2 id="sudoers">/etc/sudoers</h2>
+    <pre><code>{{.Sudoers}}</code></pre>
+
+    <h2 id="rsyslog">etc/rsyslog.conf(已去除注释行)</h2>
+    <pre><code>{{.Rsyslog}}</code></pre>
+
+    <h2 id="pamsshd">/etc/pam.d/sshd(已去除注释行)</h2>
+    <pre><code>{{.PamSSH}}</code></pre>
+
+    <h2 id="authorized_keys">/root/.ssh/authorized_keys</h2>
+    <pre><code>{{.SSHAuthorized}}</code></pre>
+
+    <h2 id="pamsystem">/etc/pam.d/system-auth(已去除注释行)</h2>
+    <pre><code>{{.PamSystem}}</code></pre>
+
+    <h2 id="pampasswd">/etc/pam.d/passwd(已去除注释行)</h2>
+    <pre><code>{{.PamPasswd}}</code></pre>
+
+    <h2 id="pwqualityconf">/etc/security/pwquality.conf(已去除注释行)</h2>
+    <pre><code>{{.PwqualityConf}}</code></pre>
+
+    <h2 id="ps">正在运行的进程</h2>
+    <pre><code>{{.PS}}</code></pre>
+
+    <h2 id="cron">定时任务</h2>
+    <pre><code>{{.CronTab}}</code></pre>
+
+    <h2 id="share">NFS服务(/etc/exports已去除注释行)</h2>
+    <pre><code>{{.Share}}</code></pre>
+
+    <h2 id="env">环境变量</h2>
+    <pre><code>{{.Env}}</code></pre>
+
+    <h2 id="rpm">rpm安装包</h2>
+    <pre><code>{{.RpmInstall}}</code></pre>
+
+    <h2 id="version">版本信息</h2>
+    <pre><code>{{.Version}}</code></pre>
+
+    <h2 id="docker">正在运行的docker</h2>
+    <pre><code>{{.Docker}}</code></pre>
+
+    <h2 id="list-unit">开机启动项</h2>
+    <pre><code>{{.ListUnit}}</code></pre>
+
+    <h2 id="AuditCtl">审计日志规则(auditctl -l)</h2>
+    <pre><code>{{.AuditCtl}}</code></pre>
+
+    <h2 id="log">部分关键日志信息</h2>
+    <pre><code><span style="color: rgb(32, 199, 29);font-size: 20px">前十行：<br></span>{{.HeadLog}}><br><span style="color: rgb(32, 199, 29);font-size: 20px">后十行：<br></span>{{.TailLog}}</code></pre>
+
+    <h2 id="logrotate">日志切割配置</h2>
+    <pre><code>{{.Logrotate}}</code></pre>
+
+    <h2 id="lastlog">用户上次登录信息</h2>
+    <pre><code>{{.LastLog}}</code></pre>
+
+</div>
+<div id="toc">
+    <h3>目录</h3>
+    <ul>
+        <li><a href="#info">服务器基本信息</a></li>
+        <li><a href="#systemstate">系统状态</a></li>
+        <li><a href="#userinfo">用户信息</a></li>
+        <li><a href="#group">组信息</a></li>
+        <li><a href="#newuserinfo">新建用户安全配置</a></li>
+        <li><a href="#pwquality">密码复杂度策略</a></li>
+        <li><a href="#sshd">sshd安全配置</a></li>
+        <li><a href="#port">端口开放状态</a></li>
+        <li><a href="#xz">xz后门检测</a></li>
+        <li><a href="#FilePer">重要文件信息</a></li>
+        <li><a href="#home">用户目录权限</a></li>
+        <li><a href="#iptables">防火墙/selinux状态</a></li>
+        <li><a href="#iptablesinfo">防火墙策略</a></li>
+        <li><a href="#allow">地址限制</a></li>
+        <li><a href="#ipaddr">网卡信息</a></li>
+        <li><a href="#disk">磁盘信息</a></li>
+        <li><a href="#dns">DNS配置信息</a></li>
+        <li><a href="#sudoers">/etc/sudoers</a></li>
+        <li><a href="#pamsshd">/etc/pam.d/sshd</a></li>
+        <li><a href="#authorized_keys">SSH免密主机</a></li>
+        <li><a href="#pamsystem">/etc/pam.d/system-auth</a></li>
+        <li><a href="#pampasswd">/etc/pam.d/passwd</a></li>
+        <li><a href="#pwqualityconf">/etc/security/pwquality.conf</a></li>
+        <li><a href="#rsyslog">/etc/rsyslog.conf</a></li>
+        <li><a href="#ps">正常运行的进程</a></li>
+        <li><a href="#cron">定时任务</a></li>
+        <li><a href="#share">NFS服务(文件共享)</a></li>
+        <li><a href="#env">环境变量</a></li>
+        <li><a href="#rpm">rpm安装包</a></li>
+        <li><a href="#version">版本信息</a></li>
+        <li><a href="#docker">正在运行的docker</a></li>
+        <li><a href="#list-unit">开机启动项</a></li>
+        <li><a href="#AuditCtl">审计日志规则</a></li>
+        <li><a href="#log">部分关键日志信息</a></li>
+        <li><a href="#logrotate">日志切割配置</a></li>
+        <li><a href="#lastlog">上次登录信息</a></li>
+    </ul>
+</div>
+<div id="watermark"></div>
+</body>
+
+</html>
+<script>
+    const watermarkNum = 30 // 生成水印数量
+    build()
+
+    function build(){
+        for(var i = 0; i < watermarkNum; i++){
+            addWatermark(i);
+        }
+    }
+
+    function addWatermark(i){
+        var watermark = document.getElementById("watermark");
+        const top = i
+        const left = random();
+        const  html = '<div class="watermark" style="top: '+(top/watermarkNum)*100+'%; left: '+left+'%;">杭州中尔网络科技有限公司</div>'
+        watermark.insertAdjacentHTML('afterend',html);
+    }
+
+    function random(){
+        return Math.floor(Math.random() * 70) ;
+    }
+
+    function showPasswordExpiryNote() {
+        alert('密码过期日期：这个字段表示用户的密码何时过期。当密码过期后，用户可能需要更换密码才能继续登录系统。');
+        return false;  // 阻止链接的默认行为
+    }
+
+    function showAccountExpiryNote() {
+        alert('账号过期日期：这个字段表示用户账号何时过期。当账号过期后，无论密码是否正确，用户都无法登录该账号。');
+        return false;  // 阻止链接的默认行为
+    }
+    function showPasswdStatus() {
+        alert('PS代表已设置密码;\nLK代表密码锁定;\nNP代表空密码;');
+        return false;  // 阻止链接的默认行为
+    }
+</script>

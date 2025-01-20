@@ -1,0 +1,297 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle安全配置核查</title>
+    <link rel="icon" href="favicon.ico" sizes="16x16">
+    <style>{{.CSS}}</style>
+</head>
+<body>
+<div id="content">
+    <div style="text-align: center;"><h1>{{.Name}}_Oracle安全策略核查</h1></div>
+
+    <h2 id="info">数据库版本信息</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Version</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Version}}
+        <tr>
+            <td>{{.}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="dbauser">用户及状态</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>配置文件</th>
+            <th>状态</th>
+            <th>密码过期时间</th>
+            <th>锁定时间</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .DBAUSERS}}
+        <tr>
+            <td>{{.User}}</td>
+            <td>{{.Profile}}</td>
+            <td>{{.Status}}</td>
+            <td>{{if .Expiry.Valid}}{{.Expiry.Time}}{{else}}{{end}}</td>
+            <td>{{if .LockTime.Valid}}{{.LockTime.Time}}{{else}}{{end}}</td>
+            <td>{{if .CreateTime.Valid}}{{.CreateTime.Time}}{{else}}{{end}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+
+    <h2 id="SYSTEMAUTHORITY">可登录用户系统权限</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>用户名称</th>
+            <th>系统权限名称</th>
+            <th>是否可以把此权限赋予其他用户</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .SYSTEMAUTHORITY}}
+        <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Privilege}}</td>
+            <td>{{.Opthion}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="ObjectPermissions">可登录用户对象权限</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>用户名称</th>
+            <th>对象（如表或视图）名称</th>
+            <th>权限名称</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .ObjectPermissions}}
+        <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Privilege}}</td>
+            <td>{{.Opthion}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+
+    <h2 id="sys">sys用户视图信息</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>用户类型</th>
+            <th>用户的密码</th>
+            <th>创建时间</th>
+            <th>最后一次更改密码时间</th>
+            <th>密码过期时间</th>
+            <th>上次登录时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .UserInfo}}
+        <tr>
+            <td>{{.UserNum.Int64}}</td>
+            <td>{{.Name.String}}</td>
+            <td>{{.TypeNum.Int64}}</td>
+            <td>{{.Password.String}}</td>
+            <td>{{.CTime.Time}}</td>
+            <td>{{if .PTime.Valid}}{{.PTime.Time}}{{else}}{{end}}</td>
+            <td>{{if .ExpTime.Valid}}{{.ExpTime.Time}}{{else}}{{end}}</td>
+            <td>{{if .LTime.Valid}}{{.LTime.Time}}{{else}}{{end}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="parameter">parameter部分安全配置信息</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>安全配置名称</th>
+            <th>参数</th>
+            <th>配置</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .ListParameter}}
+        <tr>
+            {{if eq .Name "remote_login_passwordfile"}}
+            <td>如何使用密码文件进行远程身份验证</td>
+            <td>{{.Name}}</td>
+            <td>{{.Value}}</td>
+            {{end}}
+            {{if eq .Name "remote_os_authent"}}
+            <td>是否允许基于操作系统的远程认证</td>
+            <td>{{.Name}}</td>
+            <td>{{.Value}}</td>
+            {{end}}
+            {{if eq .Name "sec_case_sensitive_logon"}}
+            <td>是否对密码进行大小写敏感的比较</td>
+            <td>{{.Name}}</td>
+            <td>{{.Value}}</td>
+            {{end}}
+            {{if eq .Name "audit_trail"}}
+            <td>确定是否记录数据库的审计信息</td>
+            <td>{{.Name}}</td>
+            <td>{{.Value}}</td>
+            {{end}}
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="timeout">超时退出设置</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>安全配置名称</th>
+            <th>参数</th>
+            <th>配置</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .IdleTime}}
+        <tr>
+            <td>{{.Profile}}</td>
+            <td>{{.ResourceNam}}</td>
+            <td>{{.Limit}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="DBA_PROFILES">配置文件中的策略规则</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>配置文件的名称</th>
+            <th>资源名称</th>
+            <th>资源类型</th>
+            <th>资源名称的限制或值</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .PasswdVerify}}
+        <tr>
+            <td>{{.Profile}}</td>
+            <td>{{.Resp}}</td>
+            <td>{{.Type}}</td>
+            <td>{{.Limit}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="audit">审计日志配置</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>当前值</th>
+            <th>是否可以在会话级别进行修改</th>
+            <th>是否可以在系统级别进行修改</th>
+            <th>是否可以在实例级别进行修改</th>
+            <th>关于参数的描述</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .AuditPARAMETER}}
+        <tr>
+            <td>{{.NAME}}</td>
+            <td>{{.VALUE.String}}</td>
+            <td>{{.ISSES_MODIFIABLE}}</td>
+            <td>{{.ISSYS_MODIFIABLE}}</td>
+            <td>{{.ISINSTANCE_MODIFIABLE}}</td>
+            <td>{{.DESCRIPTION}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+    <h2 id="FUNCTION">所有函数文本</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>对象的所有者</th>
+            <th>对象名称</th>
+            <th>源代码的行号</th>
+            <th>源代码的文本</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .FuncPass}}
+        <tr>
+            <td>{{.OWNER}}</td>
+            <td>{{.NAME}}</td>
+            <td>{{.LINE}}</td>
+            <td>{{.TEXT}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+
+</div>
+<div id="toc">
+    <h3>目录</h3>
+    <ul>
+        <li><a href="#info">数据库版本信息</a></li>
+        <li><a href="#dbauser">用户及状态</a></li>
+        <li><a href="#SYSTEMAUTHORITY">可登录用户系统权限</a></li>
+        <li><a href="#ObjectPermissions">可登录对象系统权限</a></li>
+        <li><a href="#sys">sys用户视图信息</a></li>
+        <li><a href="#parameter">parameter部分安全配置信息</a></li>
+        <li><a href="#DBA_PROFILES">配置文件中的策略规则</a></li>
+        <li><a href="#timeout">超时退出</a></li>
+        <li><a href="#audit">审计日志策略</a></li>
+        <li><a href="#FUNCTION">所有函数文本</a></li>
+
+    </ul>
+</div>
+<div id="watermark"></div>
+</body>
+
+</html>
+<script>
+    const watermarkNum = 30 // 生成水印数量
+    build()
+
+    function build(){
+        for(var i = 0; i < watermarkNum; i++){
+            addWatermark(i);
+        }
+    }
+
+    function addWatermark(i){
+        var watermark = document.getElementById("watermark");
+        const top = i
+        const left = random();
+        const  html = '<div class="watermark" style="top: '+(top/watermarkNum)*100+'%; left: '+left+'%;">杭州中尔网络科技有限公司</div>'
+        watermark.insertAdjacentHTML('afterend',html);
+    }
+
+    function random(){
+        return Math.floor(Math.random() * 70) ;
+    }
+</script>

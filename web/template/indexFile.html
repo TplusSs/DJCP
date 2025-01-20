@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZEDB自动化平台_多主机</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url("{{ .ImageURL }}");
+            background-size: cover; /* 图像铺满整个背景 */
+            background-repeat: no-repeat; /* 不重复图像 */
+            background-position: center; /* 图像居中显示 */
+        }
+        .container {
+            width: 500px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        button[type="submit"],
+        a.download-btn,
+        label.upload-btn,
+        a.single-host-mode-btn {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        a.download-btn {
+            background-color: #3498db;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        label.upload-btn {
+            background-color: #3498db;
+        }
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+        a.single-host-mode-btn {
+            background-color: #3498db;
+        }
+        select.mode-select {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        footer {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            text-align: center;
+            color: #fff;
+        }
+
+        footer a {
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.3s;
+        }
+
+        footer a:hover {
+            color: rgba(175, 210, 232, 1.0);
+            /* 鼠标悬停时降低透明度 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>多主机安全核查</h1>
+        <a href="/zedb/index" class="single-host-mode-btn">单主机模式</a>
+        <a href="/zedb/modefile" class="download-btn">下载模板文件</a>
+        <form action="/zedb/submitfile" method="POST" enctype="multipart/form-data">
+            <label for="file-upload" class="upload-btn">上传文件路径</label>
+            <input type="file" id="file-upload" name="uploaded-file" onchange="document.querySelector('.upload-btn').textContent = this.files[0].name">
+            <select class="mode-select" name="mode">
+                <option value="Linux">Linux</option>
+                <option value="Mysql">MySQL</option>
+                <option value="Redis">Redis</option>
+                <option value="pgsql">PostgreSQl</option>
+                <option value="sqlserver">SqlServer</option>
+                <option value="oracle">Oracle</option>
+                <option value="h3c">H3C</option>
+                <option value="huawei">Huawei</option>
+            </select>
+            <button type="submit" class="download-btn">提交任务</button>
+        </form>
+    </div>
+    <footer>
+        <p>©2024 <a href="http://www.hzzekj.com/Home" target="_blank">杭州中尔网络科技有限公司</a> 浙ICP备2022032237号浙公网安备 33010602012892号</p><p>version:{{ .Version }}</p>
+    </footer>
+</body>
+</html>

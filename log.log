@@ -1,0 +1,11 @@
+{"level":"WARN","time":"2024-06-12 17:29:01","caller":"run/share.go:163","msg":"采集Linux安全配置失败:","error":"192.168.11.199:连接失败,请检查密码或网络问题。"}
+{"level":"WARN","time":"2024-12-13 10:42:24","caller":"run/share.go:202","msg":"默认文件不存在","默认文件":"linux.txt"}
+{"level":"WARN","time":"2024-12-13 10:46:42","caller":"run/share.go:202","msg":"默认文件不存在","默认文件":"mysql.txt"}
+{"level":"WARN","time":"2024-12-13 10:50:00","caller":"run/share.go:61","msg":"端口转换失败: ","IP":"ip"}
+{"level":"WARN","time":"2024-12-13 10:50:00","caller":"run/share.go:239","msg":"运行记录","执行模式":"Mysql","采集总数量:":1,"采集成功数量:":0,"采集失败数量:":1,"成功率":"0.00%"}
+{"level":"WARN","time":"2024-12-13 10:50:00","caller":"run/share.go:248","msg":"失败记录","运行模式":"Mysql","IP":"ip"}
+{"level":"WARN","time":"2024-12-13 10:51:17","caller":"run/share.go:163","msg":"采集Linux安全配置失败:","error":"192.168.11.199:连接失败,请检查密码或网络问题。"}
+{"level":"WARN","time":"2024-12-13 10:55:37","caller":"run/share.go:163","msg":"采集Linux安全配置失败:","error":"192.168.11.199:连接失败,请检查密码或网络问题。"}
+{"level":"WARN","time":"2024-12-13 10:56:12","caller":"run/share.go:163","msg":"采集Linux安全配置失败:","error":"192.168.11.199:连接失败,请检查密码或网络问题。"}
+{"level":"WARN","time":"2025-01-06 16:50:23","caller":"run/share.go:163","msg":"采集Linux安全配置失败:","error":"192.168.11.201:连接失败,请检查密码或网络问题。"}
+{"level":"WARN","time":"2025-01-08 14:20:43","caller":"run/share.go:96","msg":"采集Linux安全配置失败:","error":"192.168.11.201:连接失败,请检查密码或网络问题。"}
