@@ -2,7 +2,7 @@ package poc
 
 import (
 	"fmt"
-	"golin/global"
+	"ZEDB/global"
 	"io"
 	"net/http"
 	"net/url"

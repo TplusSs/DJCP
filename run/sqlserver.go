@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/spf13/cobra"
-	"golin/global"
+	"ZEDB/global"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 	"os"

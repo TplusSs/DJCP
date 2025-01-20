@@ -2,7 +2,7 @@ package Protocol
 
 import (
 	"fmt"
-	"golin/global"
+	"ZEDB/global"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

@@ -3,7 +3,7 @@ package web
 import (
 	"fmt"
 	"github.com/xuri/excelize/v2"
-	"golin/global"
+	"ZEDB/global"
 )
 
 // CreateTmpTxt 生成xlsx转txt文件
@@ -40,7 +40,7 @@ func CreateTmpTxt(xlsx, txt string) bool {
 
 }
 
-// CreateTemplateXlsx 生成golin上传模板文件
+// CreateTemplateXlsx 生成ZEDB上传模板文件
 func CreateTemplateXlsx() bool {
 	f := excelize.NewFile()
 	defer f.Close()

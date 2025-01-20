@@ -6,7 +6,7 @@ import (
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
-	"golin/global"
+	"ZEDB/global"
 	"math/big"
 	"os"
 	"time"
@@ -27,7 +27,7 @@ func CreateCert() {
 		SerialNumber: big.NewInt(1),
 		Subject: pkix.Name{
 			Organization: []string{"高业尚"},
-			CommonName:   "Golin安全加密",
+			CommonName:   "ZEDB安全加密",
 		},
 		Issuer: pkix.Name{
 			CommonName: "高业尚",

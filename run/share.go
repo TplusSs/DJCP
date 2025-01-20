@@ -3,8 +3,8 @@ package run
 import (
 	"fmt"
 	"go.uber.org/zap"
-	"golin/config"
-	"golin/global"
+	"ZEDB/config"
+	"ZEDB/global"
 	"io/fs"
 	"net"
 	"os"

@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"golin/global"
-	"golin/run"
+	"ZEDB/global"
+	"ZEDB/run"
 )
 
 // linuxCmd represents the linux command

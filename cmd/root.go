@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/fatih/color"
-	"golin/global"
+	"ZEDB/global"
 	"os"
 
 	"github.com/spf13/cobra"

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
-	"golin/global"
+	"ZEDB/global"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"os"

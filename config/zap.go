@@ -3,7 +3,7 @@ package config
 import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"golin/global"
+	"ZEDB/global"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
 )

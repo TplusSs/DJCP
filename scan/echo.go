@@ -3,8 +3,8 @@ package scan
 import (
 	"fmt"
 	"github.com/olekukonko/tablewriter"
-	"golin/poc"
-	"golin/scan/crack"
+	"ZEDB/poc"
+	"ZEDB/scan/crack"
 	"os"
 	"strconv"
 	"strings"

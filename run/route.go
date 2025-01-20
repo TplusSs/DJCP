@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/ssh"
-	"golin/global"
+	"ZEDB/global"
 	"net"
 	"os"
 	"path/filepath"

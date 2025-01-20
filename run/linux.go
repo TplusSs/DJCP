@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
-	"golin/global"
+	"ZEDB/global"
 	"os"
 	"strings"
 )

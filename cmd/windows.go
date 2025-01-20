@@ -5,14 +5,14 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"golin/global"
-	"golin/run/windows"
+	"ZEDB/global"
+	"ZEDB/run/windows"
 	"os"
 	"os/exec"
 	"strings"
 )
 
-var batname = "GoLin_win.bat"
+var batname = "ZEDB_win.bat"
 
 // windowsCmd represents the execl command
 var windowsCmd = &cobra.Command{
@@ -41,7 +41,7 @@ func init() {
 func restartWindows() {
 	exePath, err := os.Executable()
 	if err != nil {
-		fmt.Printf("[-] 获取Golin执行绝对路径失败！\n")
+		fmt.Printf("[-] 获取ZEDB执行绝对路径失败！\n")
 		os.Exit(0)
 	}
 
@@ -57,10 +57,10 @@ if %errorLevel% == 0 (
     exit /B
 )
 cd /D %~dp0
-start "" "golinpath" windows
+start "" "ZEDBpath" windows
 exit /B
 `
-	batstring = strings.ReplaceAll(batstring, "golinpath", exePath)
+	batstring = strings.ReplaceAll(batstring, "ZEDBpath", exePath)
 	err = global.AppendToFile(batname, batstring)
 	if err != nil {
 		fmt.Printf("[-] 写入提权bat文件失败！\n")

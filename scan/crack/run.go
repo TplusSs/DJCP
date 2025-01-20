@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/fatih/color"
-	"golin/global"
+	"ZEDB/global"
 	"os"
 	"strconv"
 	"sync"

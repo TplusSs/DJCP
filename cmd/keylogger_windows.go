@@ -22,7 +22,7 @@ import (
 var keylogger = &cobra.Command{
 	Use:   "keylogger",
 	Short: "键盘记录器",
-	Long:  `实时记录键盘输入信息到日志文件中用户目录下Golin/dump.txt中`,
+	Long:  `实时记录键盘输入信息到日志文件中用户目录下ZEDB/dump.txt中`,
 	Run:   KeyLoggerCmd,
 }
 
@@ -616,7 +616,7 @@ func getAppData() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	app := usr.HomeDir + "\\Golin\\"
+	app := usr.HomeDir + "\\ZEDB\\"
 	return app
 }
 func isExist(filename string) bool {

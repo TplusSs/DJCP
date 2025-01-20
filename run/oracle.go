@@ -5,7 +5,7 @@ import (
 	"fmt"
 	_ "github.com/sijms/go-ora/v2"
 	"github.com/spf13/cobra"
-	"golin/global"
+	"ZEDB/global"
 	"html/template"
 	"os"
 	"path/filepath"

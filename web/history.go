@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"golin/global"
+	"ZEDB/global"
 	"os"
 )
 

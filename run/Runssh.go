@@ -3,7 +3,7 @@ package run
 import (
 	"fmt"
 	"golang.org/x/crypto/ssh"
-	"golin/global"
+	"ZEDB/global"
 	"html/template"
 	"io/fs"
 	"os"

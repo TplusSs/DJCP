@@ -1,4 +1,4 @@
-module golin
+module ZEDB
 
 go 1.20
 
@@ -33,6 +33,7 @@ require (
 	gorm.io/driver/postgres v1.5.0
 	gorm.io/driver/sqlserver v1.4.3
 	gorm.io/gorm v1.25.1
+	github.com/shirou/gopsutil/v3 v3.24.3
 )
 
 require (

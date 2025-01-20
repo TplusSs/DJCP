@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"github.com/spf13/cobra"
-	"golin/global"
+	"ZEDB/global"
 	"os"
 	"strings"
 	"sync"

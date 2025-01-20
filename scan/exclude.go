@@ -1,7 +1,7 @@
 package scan
 
 import (
-	"golin/global"
+	"ZEDB/global"
 	"os"
 	"strings"
 )

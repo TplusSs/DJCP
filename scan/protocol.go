@@ -3,7 +3,7 @@ package scan
 import (
 	"bufio"
 	"fmt"
-	Protocol2 "golin/Protocol"
+	Protocol2 "ZEDB/Protocol"
 	"net"
 	"strings"
 	"time"

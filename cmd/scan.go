@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"golin/scan"
+	"ZEDB/scan"
 )
 
 // ScanCmd represents the port command

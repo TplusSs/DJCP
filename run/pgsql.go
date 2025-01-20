@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/spf13/cobra"
-	"golin/global"
+	"ZEDB/global"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

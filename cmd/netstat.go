@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"golin/clientinfo"
+	"ZEDB/clientinfo"
 )
 
 // netstatCmd represents the netstat command

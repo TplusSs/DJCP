@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/cobra"
-	"golin/global"
+	"ZEDB/global"
 	"os"
 	"path/filepath"
 	"regexp"

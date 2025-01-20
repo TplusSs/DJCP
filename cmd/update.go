@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"golin/global"
+	"ZEDB/global"
 	"io"
 	"net/http"
 	"net/url"
@@ -41,14 +41,14 @@ var updateCmd = &cobra.Command{
 				BrowserDownloadUrl, savaname := "", ""
 				switch runtime.GOOS {
 				case "windows":
-					savaname = "golin.exe"
-					BrowserDownloadUrl = fmt.Sprintf("https://github.com/selinuxG/Golin/releases/download/%s/%s", newrelease.TagName, savaname)
+					savaname = "ZEDB.exe"
+					BrowserDownloadUrl = fmt.Sprintf("https://github.com/selinuxG/ZEDB/releases/download/%s/%s", newrelease.TagName, savaname)
 				case "linux":
-					savaname = "golin_linux_amd64"
-					BrowserDownloadUrl = fmt.Sprintf("https://github.com/selinuxG/Golin/releases/download/%s/%s", newrelease.TagName, savaname)
+					savaname = "ZEDB_linux_amd64"
+					BrowserDownloadUrl = fmt.Sprintf("https://github.com/selinuxG/ZEDB/releases/download/%s/%s", newrelease.TagName, savaname)
 				case "drawin":
-					savaname = "golin_drawin_amd64"
-					BrowserDownloadUrl = fmt.Sprintf("https://github.com/selinuxG/Golin/releases/download/%s/%s", newrelease.TagName, savaname)
+					savaname = "ZEDB_drawin_amd64"
+					BrowserDownloadUrl = fmt.Sprintf("https://github.com/selinuxG/ZEDB/releases/download/%s/%s", newrelease.TagName, savaname)
 				}
 				err := downloadFile(BrowserDownloadUrl, savaname, proxy)
 				if err != nil {

@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"golin/global"
-	"golin/run"
+	"ZEDB/global"
+	"ZEDB/run"
 
 	"github.com/spf13/cobra"
 )

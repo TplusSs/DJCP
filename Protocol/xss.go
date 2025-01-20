@@ -13,11 +13,11 @@ func CheckXss(targetURL string, body []byte) (bool, string) {
 	foundXSS := false
 	ply := ""
 	xssPayloads := []string{
-		`<sCrIpt>alert("Golin")</SCriPt>`,
-		`<img src=x onerror=alert("Golin")>`,
-		`<div onmouseover="alert('Golin')">`,
-		`<sCrIpt\x09>javascript:alert('Golin')</SCriPt>`,
-		`<IMG SRC="javascript:alert('Golin');">`,
+		`<sCrIpt>alert("ZEDB")</SCriPt>`,
+		`<img src=x onerror=alert("ZEDB")>`,
+		`<div onmouseover="alert('ZEDB')">`,
+		`<sCrIpt\x09>javascript:alert('ZEDB')</SCriPt>`,
+		`<IMG SRC="javascript:alert('ZEDB');">`,
 	}
 
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(body))
@@ -79,12 +79,12 @@ func CheckXss(targetURL string, body []byte) (bool, string) {
 
 			xssDetected := false
 			respDoc.Find("script, img, div").Each(func(i int, s *goquery.Selection) {
-				if s.Is("script") && strings.Contains(s.Text(), "Golin") {
+				if s.Is("script") && strings.Contains(s.Text(), "ZEDB") {
 					xssDetected = true
 				} else {
 					for _, attr := range []string{"onerror", "onmouseover", "src"} {
 						attrValue, exists := s.Attr(attr)
-						if exists && strings.Contains(attrValue, "Golin") {
+						if exists && strings.Contains(attrValue, "ZEDB") {
 							xssDetected = true
 							break
 						}

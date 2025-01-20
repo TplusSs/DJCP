@@ -3,8 +3,8 @@ package scan
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"golin/global"
-	"golin/scan/crack"
+	"ZEDB/global"
+	"ZEDB/scan/crack"
 	"os"
 	"sync"
 )

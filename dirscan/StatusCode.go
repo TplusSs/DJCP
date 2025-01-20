@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/fatih/color"
-	Protocol2 "golin/Protocol"
+	Protocol2 "ZEDB/Protocol"
 	"strconv"
 	"strings"
 	"sync"

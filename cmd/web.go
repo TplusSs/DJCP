@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"golin/web"
+	"ZEDB/web"
 )
 
 // execlCmd represents the execl command

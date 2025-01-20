@@ -2,7 +2,7 @@ package crack
 
 import (
 	"embed"
-	"golin/global"
+	"ZEDB/global"
 	"os"
 	"strings"
 )

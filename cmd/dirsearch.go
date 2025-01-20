@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"golin/dirscan"
+	"ZEDB/dirscan"
 )
 
 // networkCmd represents the network command

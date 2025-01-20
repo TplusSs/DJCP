@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
-	"golin/global"
+	"ZEDB/global"
 	"html/template"
 	"net/http"
 	"os/exec"
@@ -41,7 +41,7 @@ func Start(cmd *cobra.Command, args []string) {
 		c.Next()
 	})
 	r.NoRoute(func(c *gin.Context) {
-		GolinErrorhtml("404", "sorry~请求不存在哦!", c)
+		ZEDBErrorhtml("404", "sorry~请求不存在哦!", c)
 	})
 	r.GET("/favicon.ico", faviconHandler) //路由图标
 	r.GET("/bgi", bgiHandler)             // 背景图片
@@ -49,17 +49,17 @@ func Start(cmd *cobra.Command, args []string) {
 		c.Redirect(302, "/zedb/home")
 	})
 
-	golin := r.Group("/zedb")
+	ZEDB := r.Group("/zedb")
 	{
-		golin.GET("/home", GolinHome)              //首页
-		golin.GET("/index", GolinIndex)            //单主机index
-		golin.GET("/indexfile", GolinIndexFile)    //多主机index
-		golin.GET("/modefile", GolinMondeFileGet)  //返回模板文件
-		golin.POST("/submit", GolinSubmit)         //提交单主机任务
-		golin.POST("/submitfile", GolinSubmitFile) //提交多主机任务
-		golin.GET("/history", GolinHistory)        //历史记录
-		golin.GET("/update", GolinUpdate)          //检查更新
-		golin.GET("/dj", GolinDj)                  //模拟定级首页
+		ZEDB.GET("/home", ZEDBHome)              //首页
+		ZEDB.GET("/index", ZEDBIndex)            //单主机index
+		ZEDB.GET("/indexfile", ZEDBIndexFile)    //多主机index
+		ZEDB.GET("/modefile", ZEDBMondeFileGet)  //返回模板文件
+		ZEDB.POST("/submit", ZEDBSubmit)         //提交单主机任务
+		ZEDB.POST("/submitfile", ZEDBSubmitFile) //提交多主机任务
+		ZEDB.GET("/history", ZEDBHistory)        //历史记录
+		ZEDB.GET("/update", ZEDBUpdate)          //检查更新
+		ZEDB.GET("/dj", ZEDBDj)                  //模拟定级首页
 	}
 	// Windows、Mac下在默认浏览器中打开网页
 	go func() {

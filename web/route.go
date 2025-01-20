@@ -2,8 +2,8 @@ package web
 
 import (
 	"fmt"
-	"golin/global"
-	"golin/run"
+	"ZEDB/global"
+	"ZEDB/run"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,35 +13,35 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GolinDj 模拟定级
-func GolinDj(c *gin.Context) {
+// ZEDBDj 模拟定级
+func ZEDBDj(c *gin.Context) {
 	c.HTML(http.StatusOK, "dj.html", gin.H{"ImageURL": global.ImageURL})
 }
 
-// GolinHome GolinIndex 单主机首页
-func GolinHome(c *gin.Context) {
-	c.HTML(http.StatusOK, "golinHome.html", gin.H{"Version": global.Version, "ImageURL": global.ImageURL})
+// ZEDBHome ZEDBIndex 单主机首页
+func ZEDBHome(c *gin.Context) {
+	c.HTML(http.StatusOK, "ZEDBHome.html", gin.H{"Version": global.Version, "ImageURL": global.ImageURL})
 
 }
 
-// GolinIndex 单主机首页
-func GolinIndex(c *gin.Context) {
+// ZEDBIndex 单主机首页
+func ZEDBIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{"Version": global.Version, "ImageURL": global.ImageURL})
 }
 
-// GolinIndexFile 多主机首页
-func GolinIndexFile(c *gin.Context) {
+// ZEDBIndexFile 多主机首页
+func ZEDBIndexFile(c *gin.Context) {
 	c.HTML(http.StatusOK, "indexFile.html", gin.H{"Version": global.Version, "ImageURL": global.ImageURL})
 }
 
-// GolinSubmitFile 先获取上传的文件；判断格式是否为xlsx；转换为临时txt文件；通过share函数执行多主机模式
-func GolinSubmitFile(c *gin.Context) {
+// ZEDBSubmitFile 先获取上传的文件；判断格式是否为xlsx；转换为临时txt文件；通过share函数执行多主机模式
+func ZEDBSubmitFile(c *gin.Context) {
 	filename, err := c.FormFile("uploaded-file")
 	if err != nil {
-		GolinErrorhtml("error", "上传文件失败了哦！选择文件了吗？", c)
+		ZEDBErrorhtml("error", "上传文件失败了哦！选择文件了吗？", c)
 	}
 	if filepath.Ext(filename.Filename) != ".xlsx" {
-		GolinErrorhtml("error", "文件只允许上传xlsx格式哦！！", c)
+		ZEDBErrorhtml("error", "文件只允许上传xlsx格式哦！！", c)
 	}
 	tempfilenamexlsx := fmt.Sprintf("%v.xlsx", time.Now().Unix())
 	tempfilenametxt := fmt.Sprintf("%v.txt", time.Now().Unix())
@@ -55,7 +55,7 @@ func GolinSubmitFile(c *gin.Context) {
 	//保存上传文件
 	err = c.SaveUploadedFile(filename, tempfilenamexlsx)
 	if err != nil {
-		GolinErrorhtml("error", "上传xlsx文件保存失败！", c)
+		ZEDBErrorhtml("error", "上传xlsx文件保存失败！", c)
 	}
 	if CreateTmpTxt(tempfilenamexlsx, tempfilenametxt) {
 		mode := c.PostForm("mode")
@@ -100,7 +100,7 @@ func GolinSubmitFile(c *gin.Context) {
 		}
 		defer FileAppendJson(successlist, allserver)
 		if len(successlist) == 0 {
-			GolinErrorhtml("error", fmt.Sprintf("%d个主机全部执行失败了哦!", len(alliplist)), c)
+			ZEDBErrorhtml("error", fmt.Sprintf("%d个主机全部执行失败了哦!", len(alliplist)), c)
 			c.Abort()
 			return
 		}
@@ -115,7 +115,7 @@ func GolinSubmitFile(c *gin.Context) {
 		err := CreateZipFromFiles(successlist, tempfilenamezip)
 		if err != nil {
 			c.Header("Content-Type", "text/html; charset=utf-8")
-			GolinErrorhtml("error", "打包成zip包失败了！", c)
+			ZEDBErrorhtml("error", "打包成zip包失败了！", c)
 			c.Abort()
 			return
 		}
@@ -124,8 +124,8 @@ func GolinSubmitFile(c *gin.Context) {
 	}
 }
 
-// GolinSubmit 单次提交任务
-func GolinSubmit(c *gin.Context) {
+// ZEDBSubmit 单次提交任务
+func ZEDBSubmit(c *gin.Context) {
 	name, ip, user, passwd, port, mode, down := c.PostForm("name"), c.PostForm("ip"), c.PostForm("user"), c.PostForm("password"), c.PostForm("port"), c.PostForm("run_mode"), c.PostForm("down")
 	savefilename := fmt.Sprintf("%s_%s.log", name, ip)                //保存的文件夹名：名称_ip.log
 	successfile := filepath.Join(global.Succpath, mode, savefilename) //保存的完整路径
@@ -139,7 +139,7 @@ func GolinSubmit(c *gin.Context) {
 
 	if global.PathExists(successfile) {
 		WriteJSONToHistory(Service{name, ip, user, port, mode, time.Now().Format(time.DateTime), Failed})
-		GolinErrorhtml("error", "保存的文件中有重名文件，更换一个吧客官~", c)
+		ZEDBErrorhtml("error", "保存的文件中有重名文件，更换一个吧客官~", c)
 		return
 	}
 
@@ -177,22 +177,22 @@ func GolinSubmit(c *gin.Context) {
 		c.File(successfile)
 	} else {
 		WriteJSONToHistory(Service{name, ip, user, port, mode, time.Now().Format(time.DateTime), Failed})
-		GolinErrorhtml("error", "失败了哦客官~", c)
+		ZEDBErrorhtml("error", "失败了哦客官~", c)
 	}
 }
 
-// GolinMondeFileGet 返回模板文件
-func GolinMondeFileGet(c *gin.Context) {
+// ZEDBMondeFileGet 返回模板文件
+func ZEDBMondeFileGet(c *gin.Context) {
 	//如果本地没有模板文件则生成一个
 	if !global.PathExists(global.XlsxTemplateName) && !CreateTemplateXlsx() {
-		GolinErrorhtml("error", "模板文件生成失败!", c)
+		ZEDBErrorhtml("error", "模板文件生成失败!", c)
 	}
 	// 返回模板文件
 	sendFile(global.XlsxTemplateName, c)
 }
 
-// GolinErrorhtml 返回提示页面
-func GolinErrorhtml(status, errbody string, c *gin.Context) {
+// ZEDBErrorhtml 返回提示页面
+func ZEDBErrorhtml(status, errbody string, c *gin.Context) {
 	c.HTML(http.StatusOK, "error.html", gin.H{"Status": status, "Message": errbody, "ImageURL": global.ImageURL})
 }
 
@@ -204,29 +204,29 @@ func sendFile(name string, c *gin.Context) {
 	c.File(name)
 }
 
-// GolinUpdate 检查更新
-func GolinUpdate(c *gin.Context) {
+// ZEDBUpdate 检查更新
+func ZEDBUpdate(c *gin.Context) {
 	release, err := global.CheckForUpdate()
 	if err != nil {
-		GolinErrorhtml("error", "获取最新版本失败,网络不好吧亲～", c)
+		ZEDBErrorhtml("error", "获取最新版本失败,网络不好吧亲～", c)
 		c.Abort()
 		return
 	}
 	if release.TagName == global.Version {
-		GolinErrorhtml("success", "非常好！当前是最新版本哦~", c)
+		ZEDBErrorhtml("success", "非常好！当前是最新版本哦~", c)
 		c.Abort()
 		return
 	}
-	GolinErrorhtml("update", fmt.Sprintf("<a href='https://github.com/selinuxG/Golin-cli/releases' target='_blank'>当前版本为:%s,最新版本为:%s,点击此处进行更新！</a>", global.Version, release.TagName), c)
+	ZEDBErrorhtml("update", fmt.Sprintf("<a href='https://github.com/selinuxG/ZEDB-cli/releases' target='_blank'>当前版本为:%s,最新版本为:%s,点击此处进行更新！</a>", global.Version, release.TagName), c)
 
 }
 
-// GolinHistory 历史记录
-func GolinHistory(c *gin.Context) {
+// ZEDBHistory 历史记录
+func ZEDBHistory(c *gin.Context) {
 	c.Header("Content-Type", "text/html; charset=utf-8")
 	allserver, err := parseJSONFile()
 	if err != nil {
-		GolinErrorhtml("nil", "不存在历史记录哦~", c)
+		ZEDBErrorhtml("nil", "不存在历史记录哦~", c)
 		c.Abort()
 		return
 	}
@@ -261,7 +261,7 @@ func GolinHistory(c *gin.Context) {
 		// 将数据添加到 dataSlice
 		dataSlice = append(dataSlice, data)
 	}
-	c.HTML(http.StatusOK, "golinHistoryIndex.html", gin.H{"Data": dataSlice, "ImageURL": global.ImageURL})
+	c.HTML(http.StatusOK, "ZEDBHistoryIndex.html", gin.H{"Data": dataSlice, "ImageURL": global.ImageURL})
 }
 
 // FileAppendJson 将成功主机对比allserver主机，写入到json文件中
