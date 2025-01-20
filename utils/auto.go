@@ -1,24 +1,31 @@
 package utils
 
 import (
+    "crypto/aes"
+    "crypto/cipher"
     "crypto/sha256"
+    "encoding/base64"
+    "encoding/hex"
     "encoding/json"
     "net"
     "strings"
     "time"
-    "encoding/hex" // 导入 hex 包
+    "bytes"        // 添加 bytes 包的导入
 )
+
+// 加密密钥，实际使用中应使用更安全的密钥管理方式
+const encryptionKey = "1234567890123456"
 
 // GetMACAddress 获取本机 MAC 地址
 func GetMACAddress() (string, error) {
     interfaces, err := net.Interfaces()
-    if err!= nil {
+    if err != nil {
         return "", err
     }
     for _, iface := range interfaces {
-        if iface.Flags&net.FlagUp!= 0 && iface.Flags&net.FlagLoopback == 0 {
+        if iface.Flags&net.FlagUp != 0 && iface.Flags&net.FlagLoopback == 0 {
             addrs, err := iface.Addrs()
-            if err!= nil {
+            if err != nil {
                 continue
             }
             for _, addr := range addrs {
@@ -33,7 +40,7 @@ func GetMACAddress() (string, error) {
                     continue
                 }
                 hw := iface.HardwareAddr.String()
-                if hw!= "" {
+                if hw != "" {
                     return strings.ReplaceAll(hw, ":", ""), nil
                 }
             }
@@ -45,31 +52,49 @@ func GetMACAddress() (string, error) {
 // GenerateFeatureCode 生成特征码
 func GenerateFeatureCode() (string, error) {
     mac, err := GetMACAddress()
-    if err!= nil {
+    if err != nil {
         return "", err
     }
     currentTime := time.Now().Format("2006-01-02 15:04:05")
     data := mac + currentTime
     hash := sha256.Sum256([]byte(data))
-    // 使用 hex 包的 EncodeToString 函数
-    return hex.EncodeToString(hash[:]), nil 
+    featureCode := hex.EncodeToString(hash[:])
+
+    // 加密特征码
+    encryptedFeatureCode, err := encrypt([]byte(featureCode), []byte(encryptionKey))
+    if err != nil {
+        return "", err
+    }
+    return encryptedFeatureCode, nil
 }
 
 // ActivationCode 激活码结构体
 type ActivationCode struct {
-    FeatureCode   string    `json:"feature_code"`
-    ActivationTime time.Time `json:"activation_time"`
-    ValidPeriod   string    `json:"valid_period"`
+    FeatureCode     string    `json:"feature_code"`
+    ActivationTime  time.Time `json:"activation_time"`
+    ValidPeriod     string    `json:"valid_period"`
 }
 
 // ValidateActivationCode 验证激活码
-func ValidateActivationCode(featureCode string, activationCodeStr string) bool {
-    var activationCode ActivationCode
-    err := json.Unmarshal([]byte(activationCodeStr), &activationCode)
-    if err!= nil {
+func ValidateActivationCode(encryptedFeatureCode string, encryptedActivationCodeStr string) bool {
+    // 解密特征码
+    decryptedFeatureCode, err := decrypt(encryptedFeatureCode, []byte(encryptionKey))
+    if err != nil {
         return false
     }
-    if activationCode.FeatureCode!= featureCode {
+
+    // 解密激活码
+    decryptedActivationCode, err := decrypt(encryptedActivationCodeStr, []byte(encryptionKey))
+    if err != nil {
+        return false
+    }
+
+    var activationCode ActivationCode
+    err = json.Unmarshal([]byte(decryptedActivationCode), &activationCode)
+    if err != nil {
+        return false
+    }
+    if activationCode.FeatureCode != string(decryptedFeatureCode) {
         return false
     }
     now := time.Now()
@@ -85,4 +110,47 @@ func ValidateActivationCode(featureCode string, activationCodeStr string) bool {
         return false
     }
     return now.Before(expirationTime)
+}
+
+// 加密函数
+func encrypt(data []byte, key []byte) (string, error) {
+    block, err := aes.NewCipher(key)
+    if err != nil {
+        return "", err
+    }
+    data = PKCS7Padding(data, aes.BlockSize)
+    ciphertext := make([]byte, aes.BlockSize+len(data))
+    mode := cipher.NewCBCEncrypter(block, key[:aes.BlockSize])
+    mode.CryptBlocks(ciphertext[aes.BlockSize:], data)
+    return base64.StdEncoding.EncodeToString(ciphertext), nil
+}
+
+// 解密函数
+func decrypt(ciphertext string, key []byte) ([]byte, error) {
+    data, err := base64.StdEncoding.DecodeString(ciphertext)
+    if err != nil {
+        return nil, err
+    }
+    block, err := aes.NewCipher(key)
+    if err != nil {
+        return nil, err
+    }
+    mode := cipher.NewCBCDecrypter(block, key[:aes.BlockSize])
+    mode.CryptBlocks(data[aes.BlockSize:], data[aes.BlockSize:])
+    data = PKCS7UnPadding(data[aes.BlockSize:])
+    return data, nil
+}
+
+// PKCS7 填充
+func PKCS7Padding(data []byte, blockSize int) []byte {
+    padding := blockSize - len(data)%blockSize
+    padtext := bytes.Repeat([]byte{byte(padding)}, padding)
+    return append(data, padtext...)
+}
+
+// PKCS7 去填充
+func PKCS7UnPadding(data []byte) []byte {
+    length := len(data)
+    unpadding := int(data[length-1])
+    return data[:(length - unpadding)]
 }
