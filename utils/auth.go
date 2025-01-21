@@ -7,6 +7,7 @@ import (
     "encoding/base64"
     "encoding/hex"
     "encoding/json"
+    "fmt"
     "net"
     "strings"
     "time"
@@ -59,6 +60,7 @@ func GenerateFeatureCode() (string, error) {
     data := mac + currentTime
     hash := sha256.Sum256([]byte(data))
     featureCode := hex.EncodeToString(hash[:])
+    fmt.Printf("未加密的特征码: %s\n", featureCode)
 
     // 加密特征码
     encryptedFeatureCode, err := Encrypt([]byte(featureCode), []byte(EncryptionKey))
@@ -80,26 +82,53 @@ func ValidateActivationCode(encryptedFeatureCode string, encryptedActivationCode
     // 解密特征码
     decryptedFeatureCode, err := Decrypt(encryptedFeatureCode, []byte(EncryptionKey))
     if err!= nil {
+        fmt.Println("解密特征码时出错:", err)
         return false
     }
+    fmt.Printf("解密后的特征码: %s\n", decryptedFeatureCode)
 
     // 解密激活码
     decryptedActivationCode, err := Decrypt(encryptedActivationCodeStr, []byte(EncryptionKey))
     if err!= nil {
+        fmt.Println("解密激活码时出错:", err)
         return false
     }
+    fmt.Printf("解密后的激活码: %s\n", decryptedActivationCode)
 
     var activationCode ActivationCode
     err = json.Unmarshal([]byte(decryptedActivationCode), &activationCode)
     if err!= nil {
+        fmt.Println("解析激活码时出错:", err)
         return false
     }
-    if activationCode.FeatureCode!= string(decryptedFeatureCode) {
+    fmt.Printf("激活码中的特征码: %s\n", activationCode.FeatureCode)
+
+    // 打印原始的解密后的特征码
+    originalDecryptedFeatureCode := decryptedFeatureCode
+    // 打印从激活码中解析出的特征码
+    featureCodeFromActivationCode := []byte(activationCode.FeatureCode)
+    fmt.Printf("原始特征码: %s\n", originalDecryptedFeatureCode)
+    fmt.Printf("激活码中的特征码字节: %v\n", featureCodeFromActivationCode)
+
+    // 新增: 检查 FeatureCode 是否是加密后的形式
+    decryptedFeatureCodeFromActivationCode, err := Decrypt(activationCode.FeatureCode, []byte(EncryptionKey))
+    if err!= nil {
+        fmt.Println("解密激活码中的特征码时出错:", err)
+        return false
+    }
+    fmt.Printf("解密激活码中的特征码: %s\n", decryptedFeatureCodeFromActivationCode)
+
+    if string(originalDecryptedFeatureCode)!= string(decryptedFeatureCodeFromActivationCode) {
+        fmt.Println("特征码不匹配")
         return false
     }
     now := time.Now()
     expirationTime := activationCode.ActivationTime.AddDate(0, 0, activationCode.ValidDays)
-    return now.Before(expirationTime)
+    if now.After(expirationTime) {
+        fmt.Println("激活码已过期")
+        return false
+    }
+    return true
 }
 
 // Encrypt 加密函数
@@ -112,7 +141,9 @@ func Encrypt(data []byte, key []byte) (string, error) {
     ciphertext := make([]byte, aes.BlockSize+len(data))
     mode := cipher.NewCBCEncrypter(block, key[:aes.BlockSize])
     mode.CryptBlocks(ciphertext[aes.BlockSize:], data)
-    return base64.StdEncoding.EncodeToString(ciphertext), nil
+    encryptedStr := base64.StdEncoding.EncodeToString(ciphertext)
+    fmt.Printf("加密结果: %s\n", encryptedStr)
+    return encryptedStr, nil
 }
 
 // Decrypt 解密函数
@@ -128,6 +159,7 @@ func Decrypt(ciphertext string, key []byte) ([]byte, error) {
     mode := cipher.NewCBCDecrypter(block, key[:aes.BlockSize])
     mode.CryptBlocks(data[aes.BlockSize:], data[aes.BlockSize:])
     data = PKCS7UnPadding(data[aes.BlockSize:])
+    fmt.Printf("解密结果: %s\n", string(data))
     return data, nil
 }
 
