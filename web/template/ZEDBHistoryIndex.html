@@ -4,107 +4,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>历史任务</title>
-	<style>
-	body {
-		font-family: Arial, sans-serif;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 100vh;
-		background-image: url("{{ .ImageURL }}");
-        background-size: cover; /* 图像铺满整个背景 */
-        background-repeat: no-repeat; /* 不重复图像 */
-        background-position: center; /* 图像居中显示 */
-		margin: 0;
-	}
-    .table-wrapper {
-        width: 80%;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-    }
-    
-    table {
-        width: 100%;
-        border-collapse: separate;
-        background-color: white;
-        margin: auto;
-    }
+    <title>历史任务</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url("{{ .ImageURL }}");
+            background-size: cover; /* 图像铺满整个背景 */
+            background-repeat: no-repeat; /* 不重复图像 */
+            background-position: center; /* 图像居中显示 */
+            margin: 0;
+        }
 
-    th,
-    td {
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 1px solid #e0e0e0;
-    }
+        .table-wrapper {
+            width: 80%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
 
-    th {
-        background-color: #3498db;
-        color: white;
-        font-weight: bold;
-    }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            background-color: white;
+            margin: auto;
+        }
 
-    tr:nth-child(even) {
-        background-color: #f8f8f8;
-    }
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
 
-    tr:hover {
-        background-color: #e8f0ff;
-    }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
 
-    tbody {
-        display: block;
-        max-height: 600px;
-        overflow-y: auto;
-    }
+        tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
 
-    thead,
-    tbody tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-    }
+        tr:hover {
+            background-color: #e8f0ff;
+        }
 
-    .table-wrapper:hover {
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-        transform: translateY(-5px);
-    }
+        tbody {
+            display: block;
+            max-height: 600px;
+            overflow-y: auto;
+        }
 
-</style>
+        thead,
+        tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .table-wrapper:hover {
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* 返回首页按钮样式 */
+        .back-home-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #3498db; /* 与表头背景色一致 */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-home-button:hover {
+            background-color: #2980b9; /* 鼠标悬停时的背景色，稍微深一点 */
+        }
+    </style>
 </head>
 
 <body>
     <div class="table-wrapper">
-    <table>
-        <thead>
-            <tr>
-                <th>序号</th>
-                <th>名称</th>
-                <th>IP</th>
-                <th>用户</th>
-                <th>端口</th>
-                <th>类型</th>
-                <th>时间</th>
-                <th>状态</th>
-            </tr>
-        </thead>
-        <tbody>
-        {{range .Data}}
-        <tr>
-            <td>{{.Id}}</td>
-            <td>{{.Name}}</td>
-            <td>{{.IP}}</td>
-            <td>{{.User}}</td>
-            <td>{{.Port}}</td>
-            <td>{{.Mode}}</td>
-            <td>{{.Time}}</td>
-            <td>{{.Status}}</td>
-        </tr>
-        {{end}}
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>名称</th>
+                    <th>IP</th>
+                    <th>用户</th>
+                    <th>端口</th>
+                    <th>类型</th>
+                    <th>时间</th>
+                    <th>状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Data}}
+                <tr>
+                    <td>{{.Id}}</td>
+                    <td>{{.Name}}</td>
+                    <td>{{.IP}}</td>
+                    <td>{{.User}}</td>
+                    <td>{{.Port}}</td>
+                    <td>{{.Mode}}</td>
+                    <td>{{.Time}}</td>
+                    <td>{{.Status}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
     </div>
+    <!-- 返回首页按钮 -->
+    <a href="/" class="back-home-button">返回首页</a>
 </body>
+
 </html>

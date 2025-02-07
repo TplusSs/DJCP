@@ -59,7 +59,7 @@ func Start(cmd *cobra.Command, args []string) {
 		ZEDB.POST("/submitfile", ZEDBSubmitFile) //提交多主机任务
 		ZEDB.GET("/history", ZEDBHistory)        //历史记录
 		ZEDB.GET("/update", ZEDBUpdate)          //检查更新
-		ZEDB.GET("/dj", ZEDBDj)                  //模拟定级首页
+		//ZEDB.GET("/dj", ZEDBDj)                  //模拟定级首页
 	}
 	// Windows、Mac下在默认浏览器中打开网页
 	go func() {
